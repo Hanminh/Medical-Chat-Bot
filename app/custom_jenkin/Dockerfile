@@ -14,8 +14,15 @@ RUN apt-get update -y && \
 
 # Add Jenkins user to the Docker group (create if it doesn't exist)
 RUN groupadd -f docker && \
-    usermod -aG docker jenkins
-
+    usermod -aG docker jenkins && \
+    apt update && \
+    apt install -y unzip curl && \
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    apt install -y && \
+    curl -LO https://github.com/aquasecurity/trivy/releases/download/v0.62.1/trivy_0.62.1_Linux-64bit.deb && \
+    dpkg -i trivy_0.62.1_Linux-64bit.deb 
 # Create the Docker directory and volume for DinD
 RUN mkdir -p /var/lib/docker
 VOLUME /var/lib/docker
